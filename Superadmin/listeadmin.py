@@ -50,6 +50,13 @@ class ListeAdminPage(QWidget):
 
         # Layout principal de la page
         self.setLayout(layout)
+    def show_admin_details(self, admin_id):
+        """ Affiche les détails de l'administrateur dans une nouvelle fenêtre """
+        # Créer une fenêtre ou un message avec les détails de l'administrateur
+        print(f"Afficher les détails pour l'administrateur ID: {admin_id}")
+        # Vous pouvez ouvrir une nouvelle fenêtre avec les détails ici, par exemple
+        details_window = AdminDetailsWindow(admin_id, self)
+        details_window.exec()
 
     def fetch_admins(self):
         """ Récupère la liste des administrateurs depuis l'API et affiche dans la table """
@@ -77,22 +84,25 @@ class ListeAdminPage(QWidget):
             # Créer le bouton "Details"
             details_button = QPushButton("Details")
             details_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 5px;")
-            details_button.clicked.connect(lambda checked, id=admin["id"]: self.show_details(id))
-            
+            details_button.clicked.connect(lambda checked, id=admin["id"]: self.show_admin_details(id))
+
             # Créer le bouton "Edit"
             edit_button = QPushButton("Edit")
             edit_button.setStyleSheet("background-color: #FFA500; color: white; border-radius: 5px;")
             edit_button.clicked.connect(lambda checked, id=admin["id"]: self.edit_admin(id))
 
+         
             # Placer les boutons dans la colonne "Action"
             action_layout = QHBoxLayout()
             action_layout.addWidget(details_button)
             action_layout.addWidget(edit_button)
-
+            
             # Créer un QWidget pour mettre les boutons
             action_widget = QWidget()
             action_widget.setLayout(action_layout)
             self.table.setCellWidget(row, 4, action_widget)
+
+
 
     def show_details(self, admin_id):
         """ Affiche les détails de l'administrateur (fonction à personnaliser) """
@@ -281,3 +291,66 @@ class AddAdminWindow(QDialog):
                 print("Failed to add admin")
         except requests.exceptions.RequestException as e:
             print(f"Error: {e}")
+class AdminDetailsWindow(QDialog):
+    """ Fenêtre pour afficher les détails d'un administrateur """
+    def __init__(self, admin_id, parent=None):
+        super().__init__(parent)
+        self.admin_id = admin_id
+        self.parent = parent  # Référence à la fenêtre parente
+        self.setWindowTitle("Admin Details")
+        self.setGeometry(200, 200, 400, 400)
+
+        layout = QVBoxLayout()
+
+        # Titre de la fenêtre
+        title_label = QLabel(f"Details of Admin ID {self.admin_id}")
+        title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
+        layout.addWidget(title_label)
+
+        # Informations de l'administrateur
+        self.name_label = QLabel("Name: ")
+        layout.addWidget(self.name_label)
+
+        self.prenom_label = QLabel("First Name: ")
+        layout.addWidget(self.prenom_label)
+
+        self.date_naissance_label = QLabel("Date of Birth: ")
+        layout.addWidget(self.date_naissance_label)
+
+        self.telephone_label = QLabel("Telephone: ")
+        layout.addWidget(self.telephone_label)
+
+        self.sexe_label = QLabel("Sex: ")
+        layout.addWidget(self.sexe_label)
+
+        self.email_label = QLabel("Email: ")
+        layout.addWidget(self.email_label)
+
+        self.role_label = QLabel("Role: ")
+        layout.addWidget(self.role_label)
+
+        # Appeler la méthode pour charger les informations de l'administrateur
+        self.fetch_admin_details()
+
+        self.setLayout(layout)
+
+    def fetch_admin_details(self):
+        """ Récupère les détails de l'administrateur depuis l'API et les affiche """
+        url = f"http://localhost:8090/api/admins/{self.admin_id}"
+
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                admin = response.json()
+                # Mettre à jour les labels avec les informations récupérées
+                self.name_label.setText(f"Name: {admin.get('nom', '')} {admin.get('prenom', '')}")
+                self.prenom_label.setText(f"First Name: {admin.get('prenom', '')}")
+                self.date_naissance_label.setText(f"Date of Birth: {admin.get('dateNaissance', '')}")
+                self.telephone_label.setText(f"Telephone: {admin.get('telephone', '')}")
+                self.sexe_label.setText(f"Sex: {admin.get('sexe', '')}")
+                self.email_label.setText(f"Email: {admin.get('email', '')}")
+                self.role_label.setText(f"Role: {admin.get('role', '')}")
+            else:
+                print("Erreur de récupération des détails de l'administrateur")
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur: {e}")

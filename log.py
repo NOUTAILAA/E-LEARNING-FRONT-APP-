@@ -9,6 +9,7 @@ from Superadmin.superadminpage import SuperAdminPage
 
 from Admin.adminpage import AdminPage
 
+
 class DashboardWindow(QDialog):
     def __init__(self):
         super().__init__()
@@ -16,16 +17,16 @@ class DashboardWindow(QDialog):
         self.setWindowTitle("Tableau de Bord")
         self.setStyleSheet("background-color: #f4f4f4;")
         self.setGeometry(100, 100, 800, 500)
- 
+
         self.init_ui()
 
     def init_ui(self):
         main_layout = QVBoxLayout()
 
-      
         # ================= HEADER =================
         header = QFrame()
-        header.setStyleSheet("background-color: #2176AE; padding: 10px; border-radius: 5px;")
+        header.setStyleSheet(
+            "background-color: #2176AE; padding: 10px; border-radius: 5px;")
         header_layout = QHBoxLayout()
 
         logo_label = QLabel("Capgemini 🌍")
@@ -46,8 +47,10 @@ class DashboardWindow(QDialog):
         """)
         self.login_button.clicked.connect(self.show_login)
 
-        header_layout.addWidget(logo_label, alignment=Qt.AlignmentFlag.AlignLeft)
-        header_layout.addWidget(self.login_button, alignment=Qt.AlignmentFlag.AlignRight)
+        header_layout.addWidget(
+            logo_label, alignment=Qt.AlignmentFlag.AlignLeft)
+        header_layout.addWidget(
+            self.login_button, alignment=Qt.AlignmentFlag.AlignRight)
         header.setLayout(header_layout)
 
         main_layout.addWidget(header)
@@ -60,7 +63,8 @@ class DashboardWindow(QDialog):
         title = QLabel("Lorem ipsum dolor sit amet")
         title.setFont(QFont("Arial", 20, QFont.Weight.Bold))
 
-        description = QLabel("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+        description = QLabel(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
         description.setWordWrap(True)
         description.setFont(QFont("Arial", 12))
 
@@ -72,7 +76,8 @@ class DashboardWindow(QDialog):
         pixmap = QPixmap("1.jpg")  # Remplace par ton image
 
         size = 120
-        pixmap = pixmap.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.SmoothTransformation)
+        pixmap = pixmap.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                               Qt.TransformationMode.SmoothTransformation)
 
         path = QPainterPath()
         path.addEllipse(0, 0, size, size)
@@ -81,7 +86,8 @@ class DashboardWindow(QDialog):
 
         profile_img.setPixmap(pixmap)
         profile_img.setFixedSize(size, size)
-        profile_img.setStyleSheet("border: 3px solid #2176AE; border-radius: 60px;")
+        profile_img.setStyleSheet(
+            "border: 3px solid #2176AE; border-radius: 60px;")
         profile_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         content_layout.addLayout(text_layout, 70)
@@ -94,7 +100,8 @@ class DashboardWindow(QDialog):
 
         def create_card(icon, title, text, color):
             card = QFrame()
-            card.setStyleSheet(f"background-color: white; border-radius: 10px; padding: 15px; border: 1px solid lightgray;")
+            card.setStyleSheet(
+                f"background-color: white; border-radius: 10px; padding: 15px; border: 1px solid lightgray;")
             card_layout = QVBoxLayout()
 
             icon_label = QLabel(icon)
@@ -109,16 +116,22 @@ class DashboardWindow(QDialog):
             text_label.setWordWrap(True)
             text_label.setStyleSheet("color: gray; font-size: 12px;")
 
-            card_layout.addWidget(icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
-            card_layout.addWidget(title_label, alignment=Qt.AlignmentFlag.AlignCenter)
-            card_layout.addWidget(text_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(
+                icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(
+                title_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(
+                text_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
             card.setLayout(card_layout)
             return card
 
-        card1 = create_card("📁", "Lorem ipsum", "Lorem ipsum dolor sit amet.", "#17A2B8")
-        card2 = create_card("📅", "Dolor sit", "Lorem ipsum dolor sit amet.", "#DC3545")
-        card3 = create_card("👥", "Amet consectetur", "Lorem ipsum dolor sit amet.", "#007BFF")
+        card1 = create_card("📁", "Lorem ipsum",
+                            "Lorem ipsum dolor sit amet.", "#17A2B8")
+        card2 = create_card(
+            "📅", "Dolor sit", "Lorem ipsum dolor sit amet.", "#DC3545")
+        card3 = create_card("👥", "Amet consectetur",
+                            "Lorem ipsum dolor sit amet.", "#007BFF")
 
         card_layout.addWidget(card1)
         card_layout.addWidget(card2)
@@ -145,10 +158,11 @@ class DashboardWindow(QDialog):
         """ Ouvre la page SuperAdmin """
         superadmin_page = SuperAdminPage(self)
         superadmin_page.exec()  # Ouvre la page de superadmin dans une nouvelle fenêtre
+
     def show_admin_page(self):
         """ Ouvre la page Admin """
         admin_page = AdminPage(self)
-        admin_page.exec()  # Ouvre la page de superadmin dans une nouvelle fenêtre
+        admin_page.exec()  # Ouvre la page de admin dans une nouvelle fenêtre
 
 
 class LoginWindow(QDialog):
