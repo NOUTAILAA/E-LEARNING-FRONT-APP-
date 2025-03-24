@@ -1,13 +1,14 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QStackedWidget, QWidget
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from Superadmin.listeadmin import ListeAdminPage  # Importation de la nouvelle page pour la liste des administrateurs
 
 class SuperAdminPage(QDialog):
     """ Page spécifique pour le SuperAdmin """
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Page SuperAdmin")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(200, 200, 900, 700)
 
         # Création du layout principal
         main_layout = QHBoxLayout()
@@ -20,9 +21,14 @@ class SuperAdminPage(QDialog):
 
         # Ajoutez une page d'exemple dans le stacked widget
         self.stacked_widget.addWidget(QLabel("Page d'Administrateurs"))
-        
+           # Ajoutez d'autres pages si nécessaire ici
+        self.stacked_widget.addWidget(ListeAdminPage())  # Page des administrateurs
+
+        # Set the initial page to be ListeAdminPage (index 1)
+        self.stacked_widget.setCurrentIndex(1)  # Assure que ListeAdminPage est la première page visible
+
         # Ajoutez d'autres pages si nécessaire ici
-        # Exemple: self.stacked_widget.addWidget(self.create_departments_page())
+        self.stacked_widget.addWidget(ListeAdminPage())  # Page des administrateurs
 
         # Ajouter la navbar et le stacked widget au layout principal
         main_layout.addWidget(navbar)
@@ -91,18 +97,17 @@ class SuperAdminPage(QDialog):
     def change_page(self, page_name):
         """ Change de page dans le stacked widget en fonction du bouton cliqué """
         if page_name == "Administrateurs":
-            self.stacked_widget.setCurrentIndex(0)
+            self.stacked_widget.setCurrentIndex(1)  # Affiche la page des administrateurs
         elif page_name == "Departments":
-            self.stacked_widget.setCurrentIndex(1)
-        elif page_name == "Settings":
             self.stacked_widget.setCurrentIndex(2)
-        elif page_name == "Profile Details":
+        elif page_name == "Settings":
             self.stacked_widget.setCurrentIndex(3)
-        elif page_name == "Help & Support":
+        elif page_name == "Profile Details":
             self.stacked_widget.setCurrentIndex(4)
+        elif page_name == "Help & Support":
+            self.stacked_widget.setCurrentIndex(5)
 
     def logout(self):
         """ Action pour déconnecter l'utilisateur (peut être améliorée) """
         print("Déconnexion DE SUPERADMIN")
         self.close()
-
