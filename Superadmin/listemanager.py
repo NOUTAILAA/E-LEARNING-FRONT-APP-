@@ -132,6 +132,8 @@ class ManagersPage(QWidget):
         except requests.exceptions.RequestException as e:
             print(f"Erreur: {e}")
 
+
+
 class EditManagerWindow(QDialog):
     """ Fenêtre pour éditer un manager """
     def __init__(self, manager_id, departements, parent=None):
@@ -140,7 +142,7 @@ class EditManagerWindow(QDialog):
         self.departements = departements
         self.parent = parent
         self.setWindowTitle("Editer Manager")
-        self.setGeometry(200, 200, 400, 500)
+        self.setGeometry(200, 200, 400, 600)
 
         layout = QVBoxLayout()
 
@@ -169,16 +171,10 @@ class EditManagerWindow(QDialog):
         self.email_input.setPlaceholderText("Email")
         layout.addWidget(self.email_input)
 
-        self.photo_input = QLineEdit(self)
-        self.photo_input.setPlaceholderText("Photo (URL ou base64)")
-        layout.addWidget(self.photo_input)
-
-        self.role_input = QComboBox(self)
-        self.role_input.addItems(["Manager", "Employee"])
-        layout.addWidget(self.role_input)
-
-        self.etat_input = QCheckBox("Utilisateur vérifié", self)
-        layout.addWidget(self.etat_input)
+        self.password_input = QLineEdit(self)
+        self.password_input.setPlaceholderText("Password")
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        layout.addWidget(self.password_input)
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -209,11 +205,7 @@ class EditManagerWindow(QDialog):
                 self.telephone_input.setText(manager.get("telephone", ""))
                 self.sexe_input.setCurrentText(manager.get("sexe", ""))
                 self.email_input.setText(manager.get("email", ""))
-                self.photo_input.setText(manager.get("photo", ""))
-                self.role_input.setCurrentText(manager.get("role", ""))
-                self.etat_input.setChecked(manager.get("etat", False))
-
-                # Mettre à jour le département sélectionné
+                self.password_input.setText(manager.get("password", ""))
                 self.departement_input.setCurrentIndex(self.departement_input.findData(manager["departement"]["id"]))
             else:
                 print("Erreur de récupération des détails du manager")
@@ -230,9 +222,7 @@ class EditManagerWindow(QDialog):
             "telephone": self.telephone_input.text(),
             "sexe": self.sexe_input.currentText(),
             "email": self.email_input.text(),
-            "photo": self.photo_input.text(),
-            "role": self.role_input.currentText(),
-            "etat": self.etat_input.isChecked(),
+            "password": self.password_input.text(),
             "departement": {
                 "id": self.departement_input.currentData()
             }
@@ -251,6 +241,7 @@ class EditManagerWindow(QDialog):
 
 
 
+
 class AddManagerWindow(QDialog):
     """ Fenêtre pour ajouter un manager """
     def __init__(self, departements, parent=None):
@@ -258,7 +249,7 @@ class AddManagerWindow(QDialog):
         self.parent = parent
         self.departements = departements  # Liste des départements
         self.setWindowTitle("Ajouter Manager")
-        self.setGeometry(200, 200, 400, 500)
+        self.setGeometry(200, 200, 400, 600)
 
         layout = QVBoxLayout()
 
@@ -273,7 +264,6 @@ class AddManagerWindow(QDialog):
 
         self.date_naissance_input = QDateEdit(self)
         self.date_naissance_input.setDisplayFormat("yyyy-MM-dd")
-        self.date_naissance_input.setDate(QDate.currentDate())  # Valeur par défaut : aujourd'hui
         layout.addWidget(self.date_naissance_input)
 
         self.telephone_input = QLineEdit(self)
@@ -288,16 +278,10 @@ class AddManagerWindow(QDialog):
         self.email_input.setPlaceholderText("Email")
         layout.addWidget(self.email_input)
 
-        self.photo_input = QLineEdit(self)
-        self.photo_input.setPlaceholderText("Photo (URL ou base64)")
-        layout.addWidget(self.photo_input)
-
-        self.role_input = QComboBox(self)
-        self.role_input.addItems(["Manager", "Employee"])
-        layout.addWidget(self.role_input)
-
-        self.etat_input = QCheckBox("Utilisateur vérifié", self)  # Case à cocher pour l'état
-        layout.addWidget(self.etat_input)
+        self.password_input = QLineEdit(self)
+        self.password_input.setPlaceholderText("Password")
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        layout.addWidget(self.password_input)
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -322,9 +306,7 @@ class AddManagerWindow(QDialog):
             "telephone": self.telephone_input.text(),
             "sexe": self.sexe_input.currentText(),
             "email": self.email_input.text(),
-            "photo": self.photo_input.text(),  # Vous pourriez traiter les photos si nécessaire (base64 ou URL)
-            "role": self.role_input.currentText(),
-            "etat": self.etat_input.isChecked(),
+            "password": self.password_input.text(),
             "departement": {
                 "id": self.departement_input.currentData()  # Utilisation de l'ID du département sélectionné
             }

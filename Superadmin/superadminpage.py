@@ -90,11 +90,43 @@ class SuperAdminPage(QDialog):
                 background-color: #1B5E86;
             }
         """)
-        button.clicked.connect(lambda: self.change_page(label))
+        button.clicked.connect(lambda: self.change_page(button, label))
         layout.addWidget(button)
 
-    def change_page(self, page_name):
+    def change_page(self, active_button, page_name):
         """ Change de page dans le stacked widget en fonction du bouton cliqué """
+        # Réinitialiser tous les boutons à leur couleur d'origine
+        for button in active_button.parent().findChildren(QPushButton):
+            button.setStyleSheet("""
+                QPushButton {
+                    background-color: #2176AE;
+                    color: white;
+                    border: none;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    text-align: left;
+                }
+                QPushButton:hover {
+                    background-color: #1B5E86;
+                }
+            """)
+
+        # Appliquer la couleur active au bouton cliqué
+        active_button.setStyleSheet("""
+            QPushButton {
+                background-color: #1B5E86;
+                color: white;
+                border: none;
+                padding: 10px;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: #15688B;
+            }
+        """)
+
+        # Changer la page active dans le QStackedWidget
         if page_name == "Administrateurs":
             self.stacked_widget.setCurrentIndex(0)  # Affiche la page des administrateurs
         elif page_name == "Departements":
