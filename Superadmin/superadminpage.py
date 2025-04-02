@@ -1,7 +1,9 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QStackedWidget, QWidget
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
-from Superadmin.listeadmin import ListeAdminPage  # Importation de la nouvelle page pour la liste des administrateurs
+from Superadmin.listeadmin import ListeAdminPage
+from Superadmin.listedepartment import DepartementsPage
+from Superadmin.listemanager import ManagersPage
 
 class SuperAdminPage(QDialog):
     """ Page spécifique pour le SuperAdmin """
@@ -19,16 +21,13 @@ class SuperAdminPage(QDialog):
         # Widget pour afficher les différentes sections (via QStackedWidget)
         self.stacked_widget = QStackedWidget()
 
-        # Ajoutez une page d'exemple dans le stacked widget
-        self.stacked_widget.addWidget(QLabel("Page d'Administrateurs"))
-           # Ajoutez d'autres pages si nécessaire ici
+        # Ajoutez les pages dans le stacked widget
         self.stacked_widget.addWidget(ListeAdminPage())  # Page des administrateurs
+        self.stacked_widget.addWidget(DepartementsPage())  # Page des départements
+        self.stacked_widget.addWidget(ManagersPage())  # Page des managers (nouvelle page ajoutée)
 
-        # Set the initial page to be ListeAdminPage (index 1)
-        self.stacked_widget.setCurrentIndex(1)  # Assure que ListeAdminPage est la première page visible
-
-        # Ajoutez d'autres pages si nécessaire ici
-        self.stacked_widget.addWidget(ListeAdminPage())  # Page des administrateurs
+        # Set the initial page to be ListeAdminPage (index 0)
+        self.stacked_widget.setCurrentIndex(0)  # Par défaut, afficher la page des administrateurs
 
         # Ajouter la navbar et le stacked widget au layout principal
         main_layout.addWidget(navbar)
@@ -50,8 +49,8 @@ class SuperAdminPage(QDialog):
 
         # Ajouter les boutons de navigation
         self.create_nav_button("Administrateurs", navbar_layout)
-        self.create_nav_button("Departments", navbar_layout)
-        self.create_nav_button("Settings", navbar_layout)
+        self.create_nav_button("Departements", navbar_layout)
+        self.create_nav_button("Managers", navbar_layout)  # Lien vers la page des managers
         self.create_nav_button("Profile Details", navbar_layout)
         self.create_nav_button("Help & Support", navbar_layout)
 
@@ -97,15 +96,15 @@ class SuperAdminPage(QDialog):
     def change_page(self, page_name):
         """ Change de page dans le stacked widget en fonction du bouton cliqué """
         if page_name == "Administrateurs":
-            self.stacked_widget.setCurrentIndex(1)  # Affiche la page des administrateurs
-        elif page_name == "Departments":
-            self.stacked_widget.setCurrentIndex(2)
-        elif page_name == "Settings":
-            self.stacked_widget.setCurrentIndex(3)
+            self.stacked_widget.setCurrentIndex(0)  # Affiche la page des administrateurs
+        elif page_name == "Departements":
+            self.stacked_widget.setCurrentIndex(1)  # Affiche la page des départements
+        elif page_name == "Managers":
+            self.stacked_widget.setCurrentIndex(2)  # Affiche la page des managers
         elif page_name == "Profile Details":
-            self.stacked_widget.setCurrentIndex(4)
+            self.stacked_widget.setCurrentIndex(3)
         elif page_name == "Help & Support":
-            self.stacked_widget.setCurrentIndex(5)
+            self.stacked_widget.setCurrentIndex(4)
 
     def logout(self):
         """ Action pour déconnecter l'utilisateur (peut être améliorée) """
