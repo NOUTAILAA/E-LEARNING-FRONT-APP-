@@ -4,6 +4,7 @@ from PyQt6.QtGui import QFont
 from Superadmin.listeadmin import ListeAdminPage
 from Superadmin.listedepartment import DepartementsPage
 from Superadmin.listemanager import ManagersPage
+from Superadmin.listeapprenant import ApprenantsPage  # Import de la nouvelle page pour les apprenants
 
 class SuperAdminPage(QDialog):
     """ Page spécifique pour le SuperAdmin """
@@ -24,7 +25,8 @@ class SuperAdminPage(QDialog):
         # Ajoutez les pages dans le stacked widget
         self.stacked_widget.addWidget(ListeAdminPage())  # Page des administrateurs
         self.stacked_widget.addWidget(DepartementsPage())  # Page des départements
-        self.stacked_widget.addWidget(ManagersPage())  # Page des managers (nouvelle page ajoutée)
+        self.stacked_widget.addWidget(ManagersPage())  # Page des managers
+        self.stacked_widget.addWidget(ApprenantsPage())  # Page des apprenants
 
         # Set the initial page to be ListeAdminPage (index 0)
         self.stacked_widget.setCurrentIndex(0)  # Par défaut, afficher la page des administrateurs
@@ -50,9 +52,9 @@ class SuperAdminPage(QDialog):
         # Ajouter les boutons de navigation
         self.create_nav_button("Administrateurs", navbar_layout)
         self.create_nav_button("Departements", navbar_layout)
-        self.create_nav_button("Managers", navbar_layout)  # Lien vers la page des managers
+        self.create_nav_button("Managers", navbar_layout)
+        self.create_nav_button("Apprenants", navbar_layout)  # Ajout du lien vers la page des apprenants
         self.create_nav_button("Profile Details", navbar_layout)
-        self.create_nav_button("Help & Support", navbar_layout)
 
         # Ajouter le bouton "Log out"
         logout_button = QPushButton("Log out")
@@ -133,10 +135,10 @@ class SuperAdminPage(QDialog):
             self.stacked_widget.setCurrentIndex(1)  # Affiche la page des départements
         elif page_name == "Managers":
             self.stacked_widget.setCurrentIndex(2)  # Affiche la page des managers
+        elif page_name == "Apprenants":
+            self.stacked_widget.setCurrentIndex(3)  # Affiche la page des apprenants
         elif page_name == "Profile Details":
-            self.stacked_widget.setCurrentIndex(3)
-        elif page_name == "Help & Support":
-            self.stacked_widget.setCurrentIndex(4)
+            self.stacked_widget.setCurrentIndex(4)  # Affiche la page des détails du profil
 
     def logout(self):
         """ Action pour déconnecter l'utilisateur (peut être améliorée) """
