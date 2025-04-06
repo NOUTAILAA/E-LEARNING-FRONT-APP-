@@ -171,10 +171,7 @@ class EditManagerWindow(QDialog):
         self.email_input.setPlaceholderText("Email")
         layout.addWidget(self.email_input)
 
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText("Password")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        layout.addWidget(self.password_input)
+     
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -205,7 +202,6 @@ class EditManagerWindow(QDialog):
                 self.telephone_input.setText(manager.get("telephone", ""))
                 self.sexe_input.setCurrentText(manager.get("sexe", ""))
                 self.email_input.setText(manager.get("email", ""))
-                self.password_input.setText(manager.get("password", ""))
                 self.departement_input.setCurrentIndex(self.departement_input.findData(manager["departement"]["id"]))
             else:
                 print("Erreur de récupération des détails du manager")
@@ -222,7 +218,6 @@ class EditManagerWindow(QDialog):
             "telephone": self.telephone_input.text(),
             "sexe": self.sexe_input.currentText(),
             "email": self.email_input.text(),
-            "password": self.password_input.text(),
             "departement": {
                 "id": self.departement_input.currentData()
             }
@@ -278,10 +273,7 @@ class AddManagerWindow(QDialog):
         self.email_input.setPlaceholderText("Email")
         layout.addWidget(self.email_input)
 
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText("Password")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        layout.addWidget(self.password_input)
+      
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -306,7 +298,6 @@ class AddManagerWindow(QDialog):
             "telephone": self.telephone_input.text(),
             "sexe": self.sexe_input.currentText(),
             "email": self.email_input.text(),
-            "password": self.password_input.text(),
             "departement": {
                 "id": self.departement_input.currentData()  # Utilisation de l'ID du département sélectionné
             }

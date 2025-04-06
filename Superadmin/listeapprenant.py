@@ -224,10 +224,7 @@ class EditApprenantWindow(QDialog):
         self.telephone_input.setPlaceholderText("Téléphone")
         layout.addWidget(self.telephone_input)
 
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText("Mot de passe (laisser vide pour ne pas modifier)")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)  # Masquer le mot de passe
-        layout.addWidget(self.password_input)
+
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -271,7 +268,6 @@ class EditApprenantWindow(QDialog):
             "prenom": self.prenom_input.text(),
             "email": self.email_input.text(),
             "telephone": self.telephone_input.text(),
-            "password": self.password_input.text() if self.password_input.text() else None,  # Si vide, ne pas modifier
             "departement": {
                 "id": self.departement_input.currentData()  # Utilisation de l'ID du département sélectionné
             }
@@ -319,10 +315,7 @@ class AddApprenantWindow(QDialog):
         self.telephone_input.setPlaceholderText("Téléphone")
         layout.addWidget(self.telephone_input)
 
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText("Mot de passe")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)  # Masquer le mot de passe
-        layout.addWidget(self.password_input)
+    
 
         self.departement_input = QComboBox(self)
         self.departement_input.addItem("Sélectionner un Département")
@@ -345,7 +338,6 @@ class AddApprenantWindow(QDialog):
             "prenom": self.prenom_input.text(),
             "email": self.email_input.text(),
             "telephone": self.telephone_input.text(),
-            "password": self.password_input.text(),
             "departement": {
                 "id": self.departement_input.currentData()
             }
