@@ -5,13 +5,14 @@ from Superadmin.listeadmin import ListeAdminPage
 from Superadmin.listedepartment import DepartementsPage
 from Superadmin.listemanager import ManagersPage
 from Superadmin.listeapprenant import ApprenantsPage  # Import de la nouvelle page pour les apprenants
+from Superadmin.ProfileDetailsPage import ProfileDetailsPage
 
 class SuperAdminPage(QDialog):
     """ Page spécifique pour le SuperAdmin """
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Page SuperAdmin")
-        self.setGeometry(200, 200, 900, 700)
+        self.setGeometry(100, 100, 900, 500)
 
         # Création du layout principal
         main_layout = QHBoxLayout()
@@ -27,6 +28,7 @@ class SuperAdminPage(QDialog):
         self.stacked_widget.addWidget(DepartementsPage())  # Page des départements
         self.stacked_widget.addWidget(ManagersPage())  # Page des managers
         self.stacked_widget.addWidget(ApprenantsPage())  # Page des apprenants
+        self.stacked_widget.addWidget(ProfileDetailsPage())  # index 4
 
         # Set the initial page to be ListeAdminPage (index 0)
         self.stacked_widget.setCurrentIndex(0)  # Par défaut, afficher la page des administrateurs
@@ -81,7 +83,7 @@ class SuperAdminPage(QDialog):
         button = QPushButton(label)
         button.setStyleSheet("""
             QPushButton {
-                background-color: #2176AE;
+                background-color: #0070AD;
                 color: white;
                 border: none;
                 padding: 10px;
@@ -101,7 +103,7 @@ class SuperAdminPage(QDialog):
         for button in active_button.parent().findChildren(QPushButton):
             button.setStyleSheet("""
                 QPushButton {
-                    background-color: #2176AE;
+                    background-color: #0070AD;
                     color: white;
                     border: none;
                     padding: 10px;
@@ -141,6 +143,6 @@ class SuperAdminPage(QDialog):
             self.stacked_widget.setCurrentIndex(4)  # Affiche la page des détails du profil
 
     def logout(self):
-        """ Action pour déconnecter l'utilisateur (peut être améliorée) """
+        """ Action pour déconnecter l'utilisateur (à améliorer) """
         print("Déconnexion DE SUPERADMIN")
         self.close()

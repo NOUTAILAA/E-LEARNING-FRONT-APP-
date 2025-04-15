@@ -1,37 +1,39 @@
 import sys
-from PyQt6.QtWidgets import QDialog, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QMessageBox, QFrame
+from PyQt6.QtWidgets import (
+    QDialog, QApplication, QLabel, QPushButton, QLineEdit, QMessageBox,
+    QVBoxLayout, QHBoxLayout, QFrame, QSizePolicy
+)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
-from PyQt6.QtGui import QPixmap, QFont, QPainterPath, QRegion
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QRegion
 import requests
+from session import Session
+
 from Superadmin.superadminpage import SuperAdminPage
-
 from Admin.adminpage import AdminPage
-
+from Manager.managerpage import ManagerPage
 
 class DashboardWindow(QDialog):
     def __init__(self):
         super().__init__()
-
         self.setWindowTitle("Tableau de Bord")
         self.setStyleSheet("background-color: #f4f4f4;")
-        self.setGeometry(100, 100, 800, 500)
-
+        self.setGeometry(100, 100, 1000, 700)
         self.init_ui()
 
     def init_ui(self):
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 20, 0, 20)
 
         # ================= HEADER =================
         header = QFrame()
-        header.setStyleSheet(
-            "background-color: #2176AE; padding: 10px; border-radius: 5px;")
+        header.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        header.setStyleSheet("background-color: #2176AE; padding: 10px 30px; border-radius: 5px;")
+
         header_layout = QHBoxLayout()
 
-        logo_label = QLabel("Capgemini 🌍")
-        logo_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-        logo_label.setStyleSheet("color: white;")
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("output-onlinepngtools.png").scaledToHeight(40, Qt.TransformationMode.SmoothTransformation)
+        logo_label.setPixmap(logo_pixmap)
 
         self.login_button = QPushButton("Login")
         self.login_button.setStyleSheet("""
@@ -47,47 +49,44 @@ class DashboardWindow(QDialog):
         """)
         self.login_button.clicked.connect(self.show_login)
 
-        header_layout.addWidget(
-            logo_label, alignment=Qt.AlignmentFlag.AlignLeft)
-        header_layout.addWidget(
-            self.login_button, alignment=Qt.AlignmentFlag.AlignRight)
+        header_layout.addWidget(logo_label, alignment=Qt.AlignmentFlag.AlignLeft)
+        header_layout.addWidget(self.login_button, alignment=Qt.AlignmentFlag.AlignRight)
         header.setLayout(header_layout)
 
         main_layout.addWidget(header)
 
-        self.setLayout(main_layout)
-# ================= CONTENU PRINCIPAL =================
+        # ================= CONTENU PRINCIPAL =================
         content_layout = QHBoxLayout()
 
         text_layout = QVBoxLayout()
-        title = QLabel("Lorem ipsum dolor sit amet")
-        title.setFont(QFont("Arial", 20, QFont.Weight.Bold))
-
+        title = QLabel("       Lorem ipsum dolor sit amet")
+        title.setFont(QFont("Arial", 24, QFont.Weight.Bold))
+        
         description = QLabel(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+            "             Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
         description.setWordWrap(True)
         description.setFont(QFont("Arial", 12))
+        description.setStyleSheet("color: gray; margin-top: 30px;")
+
 
         text_layout.addWidget(title)
         text_layout.addWidget(description)
+        text_layout.addStretch()
 
-        # ================= IMAGE DE PROFIL RONDE =================
         profile_img = QLabel(self)
-        pixmap = QPixmap("1.jpg")  # Remplace par ton image
-
-        size = 120
-        pixmap = pixmap.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatioByExpanding,
-                               Qt.TransformationMode.SmoothTransformation)
+        pixmap = QPixmap("1.jpg").scaled(140, 140, Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                                         Qt.TransformationMode.SmoothTransformation)
 
         path = QPainterPath()
-        path.addEllipse(0, 0, size, size)
+        path.addEllipse(0, 0, 140, 140)
         mask = QRegion(path.toFillPolygon().toPolygon())
         profile_img.setMask(mask)
 
         profile_img.setPixmap(pixmap)
-        profile_img.setFixedSize(size, size)
-        profile_img.setStyleSheet(
-            "border: 3px solid #2176AE; border-radius: 60px;")
+        profile_img.setFixedSize(140, 140)
+        profile_img.setStyleSheet("border: 3px solid #2176AE; border-radius: 70px;")
         profile_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         content_layout.addLayout(text_layout, 70)
@@ -97,15 +96,15 @@ class DashboardWindow(QDialog):
 
         # ================= CARTES =================
         card_layout = QHBoxLayout()
+        card_layout.setSpacing(20)
 
         def create_card(icon, title, text, color):
             card = QFrame()
-            card.setStyleSheet(
-                f"background-color: white; border-radius: 10px; padding: 15px; border: 1px solid lightgray;")
+            card.setStyleSheet("background-color: white; border-radius: 10px; padding: 15px; border: 1px solid lightgray;")
             card_layout = QVBoxLayout()
 
             icon_label = QLabel(icon)
-            icon_label.setFont(QFont("Arial", 24))
+            icon_label.setFont(QFont("Arial", 28))
             icon_label.setStyleSheet(f"color: {color};")
 
             title_label = QLabel(title)
@@ -116,22 +115,18 @@ class DashboardWindow(QDialog):
             text_label.setWordWrap(True)
             text_label.setStyleSheet("color: gray; font-size: 12px;")
 
-            card_layout.addWidget(
-                icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
-            card_layout.addWidget(
-                title_label, alignment=Qt.AlignmentFlag.AlignCenter)
-            card_layout.addWidget(
-                text_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(title_label, alignment=Qt.AlignmentFlag.AlignCenter)
+            card_layout.addWidget(text_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
             card.setLayout(card_layout)
+            card.setFixedWidth(300)  # ou plus (320, 350...) selon ton écran
+            card.setFixedHeight(300)
             return card
 
-        card1 = create_card("📁", "Lorem ipsum",
-                            "Lorem ipsum dolor sit amet.", "#17A2B8")
-        card2 = create_card(
-            "📅", "Dolor sit", "Lorem ipsum dolor sit amet.", "#DC3545")
-        card3 = create_card("👥", "Amet consectetur",
-                            "Lorem ipsum dolor sit amet.", "#007BFF")
+        card1 = create_card("🗂️", "Lorem ipsum", "Lorem ipsum dolor sit amet.", "#00BCD4")
+        card2 = create_card("📅", "Dolor sit", "Lorem ipsum dolor sit amet.", "#FF6F61")
+        card3 = create_card("👥", "Amet consectetur", "Lorem ipsum dolor sit amet.", "#3F51B5")
 
         card_layout.addWidget(card1)
         card_layout.addWidget(card2)
@@ -139,35 +134,38 @@ class DashboardWindow(QDialog):
 
         main_layout.addLayout(card_layout)
 
+        # ================= FOOTER =================
+        footer = QLabel("© 2023 Inc. All rights reserved.")
+        footer.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        footer.setStyleSheet("color: gray; font-size: 9px; margin-top: 30px;")
+        main_layout.addStretch()
+        main_layout.addWidget(footer)
+
         self.setLayout(main_layout)
 
     def show_login(self):
-        """ Affiche la fenêtre de connexion """
         login_window = LoginWindow(self)
-        login_window.exec()  # Bloque jusqu'à fermeture
+        login_window.exec()
 
     def show_login_success(self):
-        """ Affiche un message de succès de connexion """
-        success_label = QLabel(
-            "Vous êtes identifié !")  # Le message à afficher
-        success_label.setStyleSheet(
-            "font-size: 18px; color: green;")  # Style du message
-        self.layout().addWidget(success_label)  # Ajoute le message au layout existant
+        success_label = QLabel("Vous êtes identifié !")
+        success_label.setStyleSheet("font-size: 18px; color: green;")
+        self.layout().addWidget(success_label)
 
     def show_superadmin_page(self):
-        """ Ouvre la page SuperAdmin """
-        superadmin_page = SuperAdminPage(self)
-        superadmin_page.exec()  # Ouvre la page de superadmin dans une nouvelle fenêtre
+        self.superadmin_page = SuperAdminPage(self)
+        self.superadmin_page.showMaximized()
 
     def show_admin_page(self):
-        """ Ouvre la page Admin """
-        admin_page = AdminPage(self)
-        admin_page.exec()  # Ouvre la page de admin dans une nouvelle fenêtre
+        self.admin_page = AdminPage(self)
+        self.admin_page.showMaximized()
+
+    def show_manager_page(self):
+        self.manager_page = ManagerPage(self)
+        self.manager_page.showMaximized()
 
 
 class LoginWindow(QDialog):
-    """ Fenêtre de connexion """
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
@@ -183,14 +181,12 @@ class LoginWindow(QDialog):
 
         self.username_input = QLineEdit()
         self.username_input.setPlaceholderText("👤 Email")
-        self.username_input.setStyleSheet(
-            "padding: 8px; border-radius: 5px; border: 1px solid #CCC;")
+        self.username_input.setStyleSheet("padding: 8px; border-radius: 5px; border: 1px solid #CCC;")
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("🔑 Mot de passe")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.password_input.setStyleSheet(
-            "padding: 8px; border-radius: 5px; border: 1px solid #CCC;")
+        self.password_input.setStyleSheet("padding: 8px; border-radius: 5px; border: 1px solid #CCC;")
 
         login_button = QPushButton("Se connecter")
         login_button.setStyleSheet("""
@@ -213,8 +209,8 @@ class LoginWindow(QDialog):
 
         self.setLayout(layout)
 
+   
     def verify_login(self):
-        """ Vérifie les identifiants et ouvre la page suivante """
         username = self.username_input.text()
         password = self.password_input.text()
 
@@ -224,32 +220,49 @@ class LoginWindow(QDialog):
         try:
             response = requests.post(url, json=data)
             if response.status_code == 200:
-                # Vérification du rôle de l'utilisateur dans la réponse
-                if "superadmin" in response.text.lower():
-                    self.accept()  # Ferme la fenêtre de connexion
-                    self.parent.show_superadmin_page()  # Affiche la page SuperAdmin
-                elif "admin" in response.text.lower():
-                    self.accept()  # Ferme la fenêtre de connexion
-                    self.parent.show_admin_page()  # Affiche la page SuperAdmin
+                response_text = response.text
+                print("Réponse du serveur :", response_text)
+
+                # Stocker l'email de l'utilisateur connecté
+                Session.current_user_email = username
+
+                # Extraction du nom (entre "Bonjour" et ",")
+                if response_text.lower().startswith("bonjour"):
+                    try:
+                        name = response_text.split("Bonjour")[1].split(",")[0].strip()
+                    except Exception:
+                        name = "Utilisateur"
+                    Session.current_user_name = name
+
+                # Détecter le rôle et naviguer
+                if "superadmin" in response_text.lower():
+                    Session.current_user_role = "superadmin"
+                    self.accept()
+                    self.parent.show_superadmin_page()
+                elif "admin" in response_text.lower():
+                    Session.current_user_role = "admin"
+                    self.accept()
+                    self.parent.show_admin_page()
+                elif "manager" in response_text.lower():
+                    Session.current_user_role = "manager"
+                    self.accept()
+                    self.parent.show_manager_page()
                 else:
-                    self.accept()  # Ferme la fenêtre de connexion
-                    self.parent.show_login_success()  # Affiche un message de connexion réussie
+                    self.accept()
+                    self.parent.show_login_success()
             else:
                 self.username_input.setStyleSheet("border: 1px solid red;")
                 self.password_input.setStyleSheet("border: 1px solid red;")
-                QMessageBox.warning(
-                    self, "Erreur de connexion", "Identifiants incorrects.")
-        except requests.exceptions.RequestException as e:
+                QMessageBox.warning(self, "Erreur de connexion", "Identifiants incorrects.")
+        except requests.exceptions.RequestException:
             self.username_input.setStyleSheet("border: 1px solid red;")
             self.password_input.setStyleSheet("border: 1px solid red;")
-            QMessageBox.warning(self, "Erreur de connexion",
-                                "Une erreur s'est produite. Veuillez réessayer.")
-
+            QMessageBox.warning(self, "Erreur de connexion", "Une erreur s'est produite. Veuillez réessayer.")
 
 def main():
     app = QApplication(sys.argv)
     dashboard_window = DashboardWindow()
-    dashboard_window.show()
+    dashboard_window.showMaximized()
     sys.exit(app.exec())
 
 
